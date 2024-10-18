@@ -1,0 +1,458 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Terminal</title>
+
+    <!-- =============================
+         External Stylesheets
+         ============================= -->
+    <!-- Tailwind CSS for utility-first styling -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- Google Fonts for typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <!-- Custom styles specific to the project -->
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- Google Fonts for typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <!-- Custom styles specific to the project -->
+    <link rel="stylesheet" href="{% static 'dashboard/styles.css' %}">
+    <!-- RMS Modal styles -->
+    <link rel="stylesheet" href="{% static 'dashboard/rms-styles.css' %}">
+
+</head>
+
+<body class="bg-gray-100 h-screen flex flex-col font-inter">
+
+    <!-- =============================
+         Header Section
+         ============================= -->
+    <header class="bg-indigo-600 text-white p-4 flex justify-between items-center">
+        <!-- App Title -->
+        <h1 class="text-xl font-bold">Trading Terminal</h1>
+        
+        <!-- Action Buttons (Login, Settings) -->
+        <div class="flex gap-4">
+            <button class="px-4 py-2 bg-indigo-700 rounded hover:bg-indigo-800 transition duration-200 flex items-center">
+                <i class="fas fa-sign-in-alt mr-2"></i> Login
+            </button>
+            <button onclick="openRMSSettings()" class="px-4 py-2 bg-indigo-700 rounded hover:bg-indigo-800 transition duration-200 flex items-center">
+                <i class="fas fa-cog mr-2"></i> RMS Settings
+            </button>
+        </div>
+    </header>
+
+    <!-- =============================
+         Main Resizable Container
+         ============================= -->
+    <div id="resizable-container" class="flex-grow flex p-4 gap-2 min-h-full">
+
+        <!-- ===========================
+             Positions Section (Resizable)
+             =========================== -->
+        <div id="positions-table" class="bg-white p-4 shadow-lg rounded-lg min-w-[200px] max-w-[75%] flex-shrink-0 overflow-x-auto">
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="bg-blue-100 p-4 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-blue-800">Total P&L</h3>
+                    <p class="text-2xl font-bold text-blue-600">$5,000</p>
+                </div>
+                <div class="bg-green-100 p-4 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-green-800">Open Positions</h3>
+                    <p class="text-2xl font-bold text-green-600">12</p>
+                </div>
+                <div class="bg-purple-100 p-4 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-purple-800">Available Margin</h3>
+                    <p class="text-2xl font-bold text-purple-600">$25,000</p>
+                </div>
+            </div>
+
+            <!-- MTM Label (highlighted and centered) -->
+            <div class="text-center mb-4">
+                <div class="bg-green-100 text-green-700 font-bold text-lg inline-block px-6 py-2 rounded-lg">
+                    MTM: <span id="mtm-value">$1500</span>
+                </div>
+            </div>
+
+            <!-- Tabs for Positions, Orderbook, Tradebook -->
+            <div class="flex justify-between mb-4 bg-gray-200 p-2 rounded">
+                <div class="flex gap-2">
+                    <button id="positions-tab" class="px-4 py-1 text-white bg-blue-500 rounded hover:bg-blue-600 transition duration-200">Positions</button>
+                    <button id="orderbook-tab" class="px-4 py-1 text-black bg-gray-300 rounded hover:bg-gray-400 transition duration-200">Orderbook</button>
+                    <button id="tradebook-tab" class="px-4 py-1 text-black bg-gray-300 rounded hover:bg-gray-400 transition duration-200">Tradebook</button>
+                </div>
+
+                <!-- Control Buttons (Refresh, Cancel All, Exit All) -->
+                <div class="flex gap-2">
+                    <button id="refresh-button" class="px-4 py-1 text-white bg-blue-500 rounded hover:bg-blue-600 transition duration-200">Refresh</button>
+                    <button id="cancel-all-button" class="px-4 py-1 text-white bg-purple-600 rounded hover:bg-purple-700 transition duration-200">Cancel All</button>
+                    <button id="exit-all-button" class="px-4 py-1 text-white bg-red-500 rounded hover:bg-red-600 transition duration-200">Exit All</button>
+                </div>
+            </div>
+
+            <!-- Table Display for Positions -->
+            <table class="w-full text-left border-collapse mb-4">
+                <thead class="bg-indigo-500 text-white border-b border-gray-300">
+                    <tr>
+                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">Symbol</th>
+                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">Avg Price</th>
+                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">Qty</th>
+                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">S/L</th>
+                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">Target</th>
+                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">Pos</th>
+                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">LTP</th>
+                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">P&L</th>
+                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">Unrealized P&L</th>
+                        <th class="px-3 py-2 cursor-col-resize">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="positions-body" class="text-black">
+                    <!-- Dynamic rows will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+
+            <!-- Pagination Controls -->
+            <div class="flex justify-center">
+                <button id="prev-page" class="px-4 py-1 bg-gray-200 text-black rounded hover:bg-gray-300 transition duration-200">Previous</button>
+                <button id="next-page" class="px-4 py-1 bg-gray-200 text-black rounded hover:bg-gray-300 transition duration-200 ml-4">Next</button>
+            </div>
+        </div>
+
+        <!-- =============================
+             Resizable Divider (Drag Handle)
+             ============================= -->
+        <div id="drag-handle" class="w-1 bg-gray-300 cursor-col-resize hover:bg-gray-400 transition duration-200"></div>
+
+        <!-- ===========================
+             Order Placement Section
+             =========================== -->
+        <div id="order-placement-form" class="bg-indigo-600 text-white p-6 shadow-lg rounded-lg flex-grow">
+            <!-- New Order Placement Section -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="exchange" class="block mb-1">Exchange</label>
+                    <select id="exchange" class="w-full p-2 rounded bg-indigo-700 text-white">
+                        <option>Select Exchange</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="segment" class="block mb-1">Segment</label>
+                    <select id="segment" class="w-full p-2 rounded bg-indigo-700 text-white">
+                        <option>Select Segment</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="symbol" class="block mb-1">Symbol</label>
+                    <select id="symbol" class="w-full p-2 rounded bg-indigo-700 text-white">
+                        <option>Select Symbol</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="expiry" class="block mb-1">Expiry</label>
+                    <select id="expiry" class="w-full p-2 rounded bg-indigo-700 text-white">
+                        <option>Select Expiry</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="flex items-center">
+                    <input type="number" id="quantity" class="w-1/2 p-2 rounded bg-indigo-700 text-white mr-2" placeholder="Quantity">
+                    <select id="lot-size" class="w-1/2 p-2 rounded bg-indigo-700 text-white">
+                        <option>Select Lots</option>
+                    </select>
+                </div>
+                <div class="flex items-center">
+                    <select id="product" class="w-1/2 p-2 rounded bg-indigo-700 text-white mr-2">
+                        <option>Select Product</option>
+                    </select>
+                    <select id="validity" class="w-1/2 p-2 rounded bg-indigo-700 text-white">
+                        <option>Select Validity</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Call and Put Panels -->
+            <div class="grid grid-cols-2 gap-4">
+                <!-- ===========================
+                     Call Panel
+                     =========================== -->
+                <div class="bg-green-100 p-4 rounded-lg">
+                    <div class="text-center mb-2">
+                        <label for="call-strike" class="block mb-1 text-black font-semibold">Call Strike</label>
+                        <div class="flex items-center justify-center">
+                            <button class="bg-green-500 text-white p-2 rounded-l">-</button>
+                            <select id="call-strike" class="w-full p-2 bg-white text-black text-center">
+                                <option>Select Strike</option>
+                            </select>
+                            <button class="bg-green-500 text-white p-2 rounded-r">+</button>
+                        </div>
+                    </div>
+                    <div class="text-center mb-2">
+                        <label for="call-ltp" class="block mb-1 text-black font-semibold">LTP</label>
+                        <span id="call-ltp" class="font-bold text-black">0.00</span>
+                    </div>
+                    <div class="flex justify-center items-center mb-2">
+                        <label class="switch mr-2">
+                            <input type="checkbox" id="call-mkt-ltp-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="text-black text-sm">MKT -- LTP</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <button class="w-1/2 p-2 bg-green-500 text-white rounded font-bold text-sm mr-1">BUY CE</button>
+                        <button class="w-1/2 p-2 bg-red-500 text-white rounded font-bold text-sm ml-1">SELL CE</button>
+                    </div>
+                    <div class="grid grid-cols-4 gap-2 mb-2">
+                        <button class="p-1 bg-blue-600 text-white rounded text-xs">25%</button>
+                        <button class="p-1 bg-blue-600 text-white rounded text-xs">50%</button>
+                        <button class="p-1 bg-blue-600 text-white rounded text-xs">75%</button>
+                        <button class="p-1 bg-blue-600 text-white rounded text-xs">100%</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <div>
+                            <label for="call-limit-price" class="block mb-1 text-black text-sm">Limit Price</label>
+                            <input type="number" id="call-limit-price" class="w-full p-2 rounded bg-white text-black" placeholder="Price">
+                        </div>
+                        <div>
+                            <label for="call-limit-qty" class="block mb-1 text-black text-sm">Limit Qty</label>
+                            <input type="number" id="call-limit-qty" class="w-full p-2 rounded bg-white text-black" placeholder="Qty">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button class="p-2 bg-green-500 text-white rounded font-bold">B</button>
+                        <button class="p-2 bg-red-500 text-white rounded font-bold">S</button>
+                    </div>
+                </div>
+
+                <!-- ===========================
+                     Put Panel
+                     =========================== -->
+                <div class="bg-red-100 p-4 rounded-lg">
+                    <div class="text-center mb-2">
+                        <label for="put-strike" class="block mb-1 text-black font-semibold">Put Strike</label>
+                        <div class="flex items-center justify-center">
+                            <button class="bg-red-500 text-white p-2 rounded-l">-</button>
+                            <select id="put-strike" class="w-full p-2 bg-white text-black text-center">
+                                <option>Select Strike</option>
+                            </select>
+                            <button class="bg-red-500 text-white p-2 rounded-r">+</button>
+                        </div>
+                    </div>
+                    <div class="text-center mb-2">
+                        <label for="put-ltp" class="block mb-1 text-black font-semibold">LTP</label>
+                        <span id="put-ltp" class="font-bold text-black">0.00</span>
+                    </div>
+                    <div class="flex justify-center items-center mb-2">
+                        <label class="switch mr-2">
+                            <input type="checkbox" id="put-mkt-ltp-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="text-black text-sm">MKT -- LTP</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <button class="w-1/2 p-2 bg-green-500 text-white rounded font-bold text-sm mr-1">BUY PE</button>
+                        <button class="w-1/2 p-2 bg-red-500 text-white rounded font-bold text-sm ml-1">SELL PE</button>
+                    </div>
+                    <div class="grid grid-cols-4 gap-2 mb-2">
+                        <button class="p-1 bg-blue-600 text-white rounded text-xs">25%</button>
+                        <button class="p-1 bg-blue-600 text-white rounded text-xs">50%</button>
+                        <button class="p-1 bg-blue-600 text-white rounded text-xs">75%</button>
+                        <button class="p-1 bg-blue-600 text-white rounded text-xs">100%</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <div>
+                            <label for="put-limit-price" class="block mb-1 text-black text-sm">Limit Price</label>
+                            <input type="number" id="put-limit-price" class="w-full p-2 rounded bg-white text-black" placeholder="Price">
+                        </div>
+                        <div>
+                            <label for="put-limit-qty" class="block mb-1 text-black text-sm">Limit Qty</label>
+                            <input type="number" id="put-limit-qty" class="w-full p-2 rounded bg-white text-black" placeholder="Qty">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button class="p-2 bg-green-500 text-white rounded font-bold">B</button>
+                        <button class="p-2 bg-red-500 text-white rounded font-bold">S</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===========================
+                 Target and Stop Loss Section
+                 =========================== -->
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <label for="target" class="block mb-1">Target</label>
+                    <input type="number" id="target" class="w-full p-2 rounded bg-indigo-700 text-white" placeholder="Target">
+                </div>
+                <div>
+                    <label for="stop-loss" class="block mb-1">Stop Loss</label>
+                    <input type="number" id="stop-loss" class="w-full p-2 rounded bg-indigo-700 text-white" placeholder="Stop Loss">
+                </div>
+            </div>
+
+            <!-- ===========================
+                 Exit and Cancel Section
+                 =========================== -->
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <button class="p-2 bg-yellow-500 text-black rounded font-bold">Exit All</button>
+                <button class="p-2 bg-purple-500 text-white rounded font-bold">Cancel All</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RMS Modal Structure -->
+    <div id="rmsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Risk Management Settings</h2>
+                <span class="close-button">&times;</span>
+            </div>
+
+            <!-- Modal Body with Sidebar and Content -->
+            <div class="modal-body">
+                <!-- Sidebar with Tabs -->
+                <div class="sidebar">
+                    <ul>
+                        <li class="active" id="manage-risk-tab">Manage Risk</li>
+                        <li id="default-settings-tab">Default Settings</li>
+                        <li id="appearance-tab">Appearance</li>
+                    </ul>
+                </div>
+
+                <!-- Content Sections -->
+                <div class="content">
+                    <!-- Manage Risk Section -->
+                    <div id="manage-risk-content" class="tab-content active">
+                        <h3>Day Loss</h3>
+                        <label for="day-loss">Max Day Loss:</label>
+                        <input type="number" id="day-loss" placeholder="Enter max day loss">
+                        <p>What happens when the day loss is hit?</p>
+                        <input type="radio" id="square-off-positions" name="day-loss-action" value="square-off">
+                        <label for="square-off-positions">Square off all my positions</label><br>
+                        <input type="radio" id="square-off-and-lock" name="day-loss-action" value="lock-terminal">
+                        <label for="square-off-and-lock">Square off all my positions and lock the terminal for:</label>
+                        <select id="lock-duration-day-loss">
+                            <option value="15">15 mins</option>
+                            <option value="30">30 mins</option>
+                            <option value="45">45 mins</option>
+                            <option value="1">1 hour</option>
+                            <option value="2">2 hours</option>
+                            <option value="3">3 hours</option>
+                            <option value="full-day">Full Day</option>
+                        </select>
+                        <br>
+                        <button class="clear-btn">Clear Fields</button>
+                        <button class="save-btn">Save Setting</button>
+
+                        <h3>Day Profit</h3>
+                        <label for="day-profit">Max Day Profit:</label>
+                        <input type="number" id="day-profit" placeholder="Enter max day profit">
+                        <p>What happens when the day profit is hit?</p>
+                        <input type="radio" id="square-off-profit" name="day-profit-action" value="square-off">
+                        <label for="square-off-profit">Square off all my positions</label><br>
+                        <input type="radio" id="square-off-and-lock-profit" name="day-profit-action" value="lock-terminal">
+                        <label for="square-off-and-lock-profit">Square off all my positions and lock the terminal for:</label>
+                        <select id="lock-duration-day-profit">
+                            <option value="15">15 mins</option>
+                            <option value="30">30 mins</option>
+                            <option value="45">45 mins</option>
+                            <option value="1">1 hour</option>
+                            <option value="2">2 hours</option>
+                            <option value="3">3 hours</option>
+                            <option value="full-day">Full Day</option>
+                        </select>
+                        <br>
+                        <button class="clear-btn">Clear Fields</button>
+                        <button class="save-btn">Save Setting</button>
+
+                        <h3>Profit Protect</h3>
+                        <label for="profit-protect-level">Set Profit Protection Level:</label>
+                        <input type="number" id="profit-protect-level" placeholder="Enter profit level"><br>
+                        <label for="profit-to-protect">Select Percentage of Profit to Protect:</label>
+                        <select id="profit-to-protect">
+                            <option value="50">50%</option>
+                            <option value="60">60%</option>
+                            <option value="70">70%</option>
+                            <option value="80">80%</option>
+                            <option value="90">90%</option>
+                        </select>
+                        <br>
+                        <button class="clear-btn">Clear Fields</button>
+                        <button class="save-btn">Save Setting</button>
+
+                        <h3>Trade Limit</h3>
+                        <label for="trade-limit">Max Number of Trades in a Session:</label>
+                        <input type="number" id="trade-limit" placeholder="Enter max trades">
+                        <br>
+                        <button class="clear-btn">Clear Fields</button>
+                        <button class="save-btn">Save Setting</button>
+
+                        <h3>Max Quantity to Trade</h3>
+                        <label for="max-quantity">Max Quantity in a Single Trade:</label>
+                        <input type="number" id="max-quantity" placeholder="Enter max quantity">
+                        <br>
+                        <button class="clear-btn">Clear Fields</button>
+                        <button class="save-btn">Save Setting</button>
+
+                        <h3>Trade Frequency</h3>
+                        <label for="trade-frequency">Number of Trades Allowed:</label>
+                        <input type="number" id="trade-frequency" placeholder="Enter number of trades">
+                        <label for="trade-duration">In:</label>
+                        <select id="trade-duration">
+                            <option value="15">15 mins</option>
+                            <option value="30">30 mins</option>
+                            <option value="45">45 mins</option>
+                            <option value="1">1 hour</option>
+                            <option value="2">2 hours</option>
+                            <option value="3">3 hours</option>
+                            <option value="full-day">Full Day</option>
+                        </select>
+                        <br>
+                        <button class="clear-btn">Clear Fields</button>
+                        <button class="save-btn">Save Setting</button>
+                    </div>
+
+                    <!-- Placeholder Content for Default Settings -->
+                    <div id="default-settings-content" class="tab-content">
+                        <h3>Default Settings</h3>
+                        <p>This section is under construction.</p>
+                    </div>
+
+                    <!-- Placeholder Content for Appearance -->
+                    <div id="appearance-content" class="tab-content">
+                        <h3>Appearance</h3>
+                        <p>This section is under construction.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button class="reset-btn">Reset</button>
+                <button class="save-btn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =============================
+         External Scripts
+         ============================= -->
+    <!-- JavaScript for resizing, pagination, and dynamic table loading -->
+    <script src="{% static 'dashboard/scripts.js' %}"></script>
+    <!-- RMS Modal scripts -->
+    <script src="{% static 'dashboard/rms-scripts.js' %}"></script>
+</body>
+
+</html>
