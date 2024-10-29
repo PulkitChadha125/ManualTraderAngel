@@ -21,4 +21,10 @@ from dashboard import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.dashboard_view, name='dashboard'),
+    path('login/', views.api_login, name='api_login'),
+    path('futidx-buy/', views.futidx_buy, name='futidx_buy'),
+    path('futidx-sell/', views.futidx_sell, name='futidx_sell'),
+    path('b-action/', views.b_action, name='b_action'),
+    path('s-action/', views.s_action, name='s_action'),
+    path('fetch-symbol-data/', views.fetch_symbol_data, name='fetch_symbol_data'),
 ]

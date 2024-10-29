@@ -264,3 +264,42 @@ input:checked + .slider:before {
 .cancel-all-btn:hover {
     background-color: #7c3aed;
 }
+
+//edit done by me
+
+.hidden {
+    display: none;
+}
+
+.panel-container {
+    width: 100%; /* Ensure both panels take up the full width */
+    margin: 0 auto;
+}
+
+.bg-indigo-600 {
+    width: 100%;
+}
+
+.toggle-container {
+    display: flex;
+    justify-content: center; /* This centers the buttons horizontally */
+    margin-bottom: 20px; /* Adjust spacing between buttons and order panel */
+}
+
+.tab-button {
+    padding: 10px 20px;
+    background-color: #1d4ed8; /* Blue background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px; /* Space between buttons */
+    cursor: pointer;
+}
+
+.tab-button.active {
+    background-color: #4ade80; /* Green background for active button */
+}
+
+.tab-button:hover {
+    background-color: #2563eb; /* Slightly darker blue on hover */
+}

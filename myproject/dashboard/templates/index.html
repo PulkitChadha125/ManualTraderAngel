@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Terminal</title>
+
+    <!-- =============================
+         External Stylesheets
+         ============================= -->
+    <!-- Tailwind CSS for utility-first styling -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- Google Fonts for typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <!-- Custom styles specific to the project -->
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <!-- RMS Modal styles -->
+    <link rel="stylesheet" href="{% static 'rms-styles.css' %}">
+</head>
+
+<body class="bg-gray-100 h-screen flex flex-col font-inter">
+
+<!-- =============================
+     FUTIDX and OPTIDX Toggle
+     ============================= -->
+<div class="flex justify-center mb-4">
+    <div class="toggle-container">
+        <button id="optidx-btn" class="tab-button active" onclick="showOptidx()">OPTIDX</button>
+        <button id="futidx-btn" class="tab-button" onclick="showFutidx()">FUTIDX</button>
+    </div>
+</div>
+
+
+<!-- OPTIDX Panel -->
+
+ <div id="optidx-panel" class="panel-container">
+    <div id="optidx-order-placement-form" class="bg-indigo-600 text-white p-6 shadow-lg rounded-lg flex-grow">
+        <!-- New Order Placement Section (OPTIDX) -->
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <label for="optidx-exchange" class="block mb-1">Exchange</label>
+                <select id="optidx-exchange" class="w-full p-2 rounded bg-indigo-700 text-white">
+                    <option>Select Exchange</option>
+                </select>
+            </div>
+            <div>
+                <label for="optidx-segment" class="block mb-1">Segment</label>
+                <select id="optidx-segment" class="w-full p-2 rounded bg-indigo-700 text-white">
+                    <option>Select Segment</option>
+                </select>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <label for="optidx-symbol" class="block mb-1">Symbol</label>
+                <select id="optidx-symbol" class="w-full p-2 rounded bg-indigo-700 text-white">
+                    <option>Select Symbol</option>
+                </select>
+            </div>
+            <div>
+                <label for="optidx-expiry" class="block mb-1">Expiry</label>
+                <input type="date" id="optidx-expiry" class="w-full p-2 rounded bg-indigo-700 text-white">
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="flex items-center">
+                <input type="number" id="optidx-quantity" class="w-1/2 p-2 rounded bg-indigo-700 text-white mr-2" placeholder="Quantity">
+                <select id="optidx-lot-size" class="w-1/2 p-2 rounded bg-indigo-700 text-white">
+                    <option>Select Lots</option>
+                </select>
+            </div>
+            <div class="flex items-center">
+                <select id="optidx-product" class="w-1/2 p-2 rounded bg-indigo-700 text-white mr-2">
+                    <option>Select Product</option>
+                </select>
+                <select id="optidx-validity" class="w-1/2 p-2 rounded bg-indigo-700 text-white">
+                    <option>Select Validity</option>
+                </select>
+            </div>
+        </div>
+<div class="flex justify-center mb-4">
+    <h1 class="text-yellow-100 rounded font-bold text-lg">
+        <!-- This text will be dynamically updated -->
+    </h1>
+</div>
+
+        <!-- Call and Put Panels with Strike Selection -->
+        <div class="grid grid-cols-2 gap-4">
+            <!-- ===========================
+                 Call Panel
+                 =========================== -->
+            <div class="flex flex-col justify-around bg-green-100 p-4 rounded-lg">
+                <div class="text-center mb-2">
+                    <label for="call-strike" class="block mb-1 text-black font-semibold">Call Strike</label>
+                    <div class="flex items-center justify-center">
+                      <button id="call-strike-minus" class="bg-green-500 text-white p-2 rounded-l">-</button>
+
+                        <select id="call-strike" class="w-full p-2 bg-white text-black text-center">
+    <option>Select Strike</option>
+</select>
+                      <button id="call-strike-plus" class="bg-green-500 text-white p-2 rounded-r">+</button>
+                    </div>
+                </div>
+                <div class="text-center mb-2">
+                    <label for="call-ltp" class="block mb-1 text-black font-semibold">LTP</label>
+                    <span id="call-ltp" class="font-bold text-black">0.00</span>
+                </div>
+                <div class="flex justify-center items-center mb-2">
+                    <label class="switch mr-2">
+                        <input type="checkbox" id="call-mkt-ltp-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="text-black text-sm">MKT -- LTP</span>
+                </div>
+                <div class="flex justify-between mb-2">
+                    <button class="w-1/2 p-2 bg-green-500 text-white rounded font-bold text-sm mr-1">BUY CE</button>
+                    <button class="w-1/2 p-2 bg-red-500 text-white rounded font-bold text-sm ml-1">SELL CE</button>
+                </div>
+                <div class="grid grid-cols-4 gap-2 mb-2">
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">25%</button>
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">50%</button>
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">75%</button>
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">100%</button>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mb-2">
+                    <div>
+                        <label for="call-limit-price" class="block mb-1 text-black text-sm">Limit Price</label>
+                        <input type="number" id="call-limit-price" class="w-full p-2 rounded bg-white text-black" placeholder="Price">
+                    </div>
+                    <div>
+                        <label for="call-limit-qty" class="block mb-1 text-black text-sm">Limit Qty</label>
+                        <input type="number" id="call-limit-qty" class="w-full p-2 rounded bg-white text-black" placeholder="Qty">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="p-2 bg-green-500 text-white rounded font-bold">B</button>
+                    <button class="p-2 bg-red-500 text-white rounded font-bold">S</button>
+                </div>
+            </div>
+
+            <!-- ===========================
+                 Put Panel
+                 =========================== -->
+            <div class="flex flex-col justify-around bg-red-100 p-4 rounded-lg">
+                <div class="text-center mb-2">
+                    <label for="put-strike" class="block mb-1 text-black font-semibold">Put Strike</label>
+                    <div class="flex items-center justify-center">
+                         <button id="put-strike-minus" class="bg-red-500 text-white p-2 rounded-l">-</button>
+
+                       <select id="put-strike" class="w-full p-2 bg-white text-black text-center">
+    <option>Select Strike</option>
+</select>
+                       <button id="put-strike-plus" class="bg-red-500 text-white p-2 rounded-r">+</button>
+                    </div>
+                </div>
+                <div class="text-center mb-2">
+                    <label for="put-ltp" class="block mb-1 text-black font-semibold">LTP</label>
+                    <span id="put-ltp" class="font-bold text-black">0.00</span>
+                </div>
+                <div class="flex justify-center items-center mb-2">
+                    <label class="switch mr-2">
+                        <input type="checkbox" id="put-mkt-ltp-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="text-black text-sm">MKT -- LTP</span>
+                </div>
+                <div class="flex justify-between mb-2">
+                    <button class="w-1/2 p-2 bg-green-500 text-white rounded font-bold text-sm mr-1">BUY PE</button>
+                    <button class="w-1/2 p-2 bg-red-500 text-white rounded font-bold text-sm ml-1">SELL PE</button>
+                </div>
+                <div class="grid grid-cols-4 gap-2 mb-2">
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">25%</button>
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">50%</button>
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">75%</button>
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">100%</button>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mb-2">
+                    <div>
+                        <label for="put-limit-price" class="block mb-1 text-black text-sm">Limit Price</label>
+                        <input type="number" id="put-limit-price" class="w-full p-2 rounded bg-white text-black" placeholder="Price">
+                    </div>
+                    <div>
+                        <label for="put-limit-qty" class="block mb-1 text-black text-sm">Limit Qty</label>
+                        <input type="number" id="put-limit-qty" class="w-full p-2 rounded bg-white text-black" placeholder="Qty">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="p-2 bg-green-500 text-white rounded font-bold">B</button>
+                    <button class="p-2 bg-red-500 text-white rounded font-bold">S</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+
+<!-- FUTIDX Panel -->
+<form id="futidx-form" method="POST" action="{% url 'futidx_buy' %}">
+    {% csrf_token %}
+    <input type="hidden" id="futidx-action" name="action" value="buy">
+<div id="futidx-panel" class="panel-container hidden">
+    <div id="futidx-order-placement-form" class="bg-indigo-600 text-white p-6 shadow-lg rounded-lg flex-grow">
+
+        <!-- New Order Placement Section (FUTIDX) -->
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <!-- Exchange Field -->
+            <div>
+                <label for="futidx-exchange" class="block mb-1">Exchange</label>
+                <select id="futidx-exchange" class="w-full p-2 rounded bg-indigo-700 text-white" disabled>
+                    <option value="NFO">NFO</option>
+                </select>
+            </div>
+
+            <!-- Segment Field -->
+            <div>
+                <label for="futidx-segment" class="block mb-1">Segment</label>
+                <select id="futidx-segment" class="w-full p-2 rounded bg-indigo-700 text-white" disabled>
+                    <option value="FUTIDX">FUTIDX</option>
+                </select>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+             <!-- Symbol Field -->
+           <div class="grid grid-cols-2 gap-4 mb-4">
+            <label for="futidx-symbol" class="block mb-1">Symbol</label>
+            <select id="futidx-symbol" class="w-full p-2 rounded bg-indigo-700 text-white" name="symbol">
+                <option value="">Select Symbol</option>
+                <option value="NIFTY">NIFTY</option>
+                <option value="BANKNIFTY">BANKNIFTY</option>
+                <option value="MIDCAPNIFTY">MIDCAPNIFTY</option>
+                <option value="FINNIFTY">FINNIFTY</option>
+            </select>
+        </div>
+             <!-- Expiry Field -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <label for="futidx-expiry" class="block mb-1">Expiry</label>
+                <input type="date" id="futidx-expiry" class="w-full p-2 rounded bg-indigo-700 text-white" name="expiry">
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+             <!-- Quantity and Lots Field -->
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+            <label for="futidx-quantity" class="block mb-1">Quantity</label>
+            <input type="number" id="futidx-quantity" class="w-1/2 p-2 rounded bg-indigo-700 text-white mr-2" placeholder="Quantity" name="quantity">
+            <select id="lot-size" class="w-1/2 p-2 rounded bg-indigo-700 text-white">
+    <option>Select Lots</option>
+</select>
+
+
+        </div>
+              <!-- Product and Validity Field -->
+
+            <div class="flex items-center">
+                 <select id="futidx-product" class="w-1/2 p-2 rounded bg-indigo-700 text-white mr-2">
+                    <option value="INTRADAY">INTRADAY</option>
+                </select>
+                <select id="futidx-validity" class="w-1/2 p-2 rounded bg-indigo-700 text-white">
+                    <option value="DAY">DAY</option>
+                </select>
+            </div>
+        </div>
+        <div class="flex justify-center mb-4">
+            <h1 class="text-yellow-100 rounded font-bold text-lg">
+                Bank Nifty Feb FUT
+            </h1>
+        </div>
+        <!-- Call and Put Panels -->
+        <div class="grid grid-cols-2 gap-4">
+            <!-- ===========================
+                 Call Panel
+                 =========================== -->
+            <div class="flex flex-col justify-around bg-green-100 p-4 rounded-lg">
+                <div class="flex justify-center">
+                         <button type="submit" class="w-1/2 p-2 bg-green-500 text-white rounded font-bold text-sm my-6" onclick="setAction('buy')">BUY</button>
+
+                    <div class="text-center my-6 ml-10">
+                        <label for="futidx-call-ltp" class="block text-black font-semibold">LTP</label>
+                        <span id="futidx-call-ltp" class="font-bold text-black">0.00</span>
+                    </div>
+                    <div class="flex justify-center items-center my-6 ml-2">
+                        <label class="switch mr-2">
+                            <input type="checkbox" id="futidx-call-mkt-ltp-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="text-black text-sm font-bold">MKT -- LTP</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">25%</button>
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">50%</button>
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">75%</button>
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">100%</button>
+                </div>
+               <div class="flex gap-2 my-6">
+    <label for="futidx-buy-limit-price" class="block mb-1 text-black font-bold text-sm">Limit Price</label>
+    <input type="number" id="futidx-buy-limit-price" class="w-full p-2 rounded bg-white text-black" placeholder="Price" name="limit_price">
+
+    <label for="futidx-buy-limit-qty" class="block mb-1 text-black font-bold text-sm">Limit Qty</label>
+    <input type="number" id="futidx-buy-limit-qty" class="w-full p-2 rounded bg-white text-black" placeholder="Qty" name="limit_qty">
+
+    <button class="w-1/3 p-2 bg-green-500 text-white rounded font-bold mr-2" id="futidx-b-button" type="button"
+            onclick="setAction('B'); submitForm()">B</button>
+</div>
+
+            </div>
+
+            <!-- ===========================
+                 Put Panel
+                 =========================== -->
+            <div class="flex flex-col justify-around bg-red-100 p-4 rounded-lg">
+                <div class="flex justify-center mb-2">
+                 <button type="submit" class="w-1/2 p-2 bg-red-500 text-white rounded font-bold text-sm my-6" onclick="setAction('sell')">SELL</button>
+                    <div class="text-center my-6 ml-10">
+                        <label for="futidx-put-ltp" class="block text-black font-semibold">LTP</label>
+                        <span id="futidx-put-ltp" class="font-bold text-black">0.00</span>
+                    </div>
+                    <div class="flex justify-center items-center my-6 ml-6">
+                        <label class="switch mr-2">
+                            <input type="checkbox" id="futidx-put-mkt-ltp-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="text-black text-sm font-bold">MKT -- LTP</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-4 gap-2 mb-6">
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">25%</button>
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">50%</button>
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">75%</button>
+                    <button class="p-1 bg-blue-600 text-white rounded text-xs">100%</button>
+                </div>
+                <div class="flex gap-2 my-6">
+                     <label for="futidx-sell-limit-price" class="block mb-1 text-black font-bold text-sm">Limit Price</label>
+                <input type="number" id="futidx-sell-limit-price" class="w-full p-2 rounded bg-white text-black" placeholder="Price" name="sell-limit-price">
+                <label for="futidx-sell-limit-qty" class="block mb-1 text-black font-bold text-sm">Limit Qty</label>
+                <input type="number" id="futidx-sell-limit-qty" class="w-full p-2 rounded bg-white text-black" placeholder="Qty" name="sell-limit-qty">
+                <button class="w-1/3 p-2 bg-red-500 text-white rounded font-bold mr-2" id="futidx-s-button"
+                        type="button" onclick="setAction('S'); submitForm()">S</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===========================
+             Target and Stop Loss Section
+             =========================== -->
+        <div class="grid grid-cols-2 gap-4 mt-4">
+            <div>
+                <label for="futidx-target" class="block mb-1">Target</label>
+                <input type="number" id="futidx-target" class="w-full p-2 rounded bg-indigo-700 text-white" placeholder="Target">
+            </div>
+            <div>
+                <label for="futidx-stop-loss" class="block mb-1">Stop Loss</label>
+                <input type="number" id="futidx-stop-loss" class="w-full p-2 rounded bg-indigo-700 text-white" placeholder="Stop Loss">
+            </div>
+        </div>
+
+        <!-- ===========================
+             Exit and Cancel Section
+             =========================== -->
+        <div class="grid grid-cols-2 gap-4 mt-4">
+            <button class="p-2 bg-yellow-500 text-black rounded font-bold">Exit All</button>
+            <button class="p-2 bg-purple-500 text-white rounded font-bold">Cancel All</button>
+        </div>
+    </div>
+    </div>
+
+    </form>
+
+<script src="{% static 'futidx/script.js' %}"></script>
+<script src="{% static 'dashboard/scripts.js' %}"></script>
+<script src="{% static 'script.js' %}"></script>
+
+<script>
+  // Set the hidden action field based on the button clicked
+    function setAction(action) {
+        document.getElementById('futidx-action').value = action;
+    }
+
+    // Submit the form using AJAX
+    function submitForm() {
+        const form = document.getElementById('futidx-form');
+        const formData = new FormData(form);
+        const action = formData.get('action'); // Get the action type (buy, sell, B, S)
+        let url;
+
+        // Determine the appropriate URL based on the action type
+        if (action === 'buy') {
+            url = "{% url 'futidx_buy' %}";
+        } else if (action === 'sell') {
+            url = "{% url 'futidx_sell' %}";
+        } else if (action === 'B') {
+            url = "{% url 'b_action' %}";
+        } else if (action === 'S') {
+            url = "{% url 's_action' %}";
+        }
+
+        // Send AJAX request
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+        /////   alert(`${action} action completed!`);
+            console.log("Action:", action, "Symbol:", data.symbol, "Expiry:", data.expiry, "Quantity:", data.quantity, "Limit Price:", data.limit_price, "Limit Qty:", data.limit_qty);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    // Handle form submission without page reload
+    document.getElementById('futidx-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        submitForm();
+    });
+
+    // Lot size population based on symbol
+    document.getElementById('futidx-symbol').addEventListener('change', function () {
+        const symbol = this.value;
+        const lotSizeSelect = document.getElementById('lot-size');
+        const quantityInput = document.getElementById('futidx-quantity');
+        lotSizeSelect.innerHTML = '<option>Select Lots</option>';
+
+        let lotMultiplier = 0;
+        if (symbol === 'NIFTY' || symbol === 'FINNIFTY') {
+            lotMultiplier = 25;
+        } else if (symbol === 'BANKNIFTY') {
+            lotMultiplier = 15;
+        } else if (symbol === 'MIDCAPNIFTY') {
+            lotMultiplier = 50;
+        }
+
+        // Populate lot sizes in multiples up to 5000
+        if (lotMultiplier > 0) {
+            for (let i = lotMultiplier; i <= 5000; i += lotMultiplier) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.text = i;
+                lotSizeSelect.appendChild(option);
+            }
+        }
+
+        // Update quantity based on selected lot size
+        lotSizeSelect.addEventListener('change', function () {
+            quantityInput.value = this.value;
+        });
+    });
+
+    // Panel toggling functions
+    function showOptidx() {
+        document.getElementById('optidx-panel').classList.remove('hidden');
+        document.getElementById('futidx-panel').classList.add('hidden');
+    }
+
+    function showFutidx() {
+        document.getElementById('futidx-panel').classList.remove('hidden');
+        document.getElementById('optidx-panel').classList.add('hidden');
+    }
+
+    // Initialize on page load
+    document.addEventListener("DOMContentLoaded", function() {
+        showFutidx();
+        document.getElementById('futidx-btn').addEventListener('click', showFutidx);
+        document.getElementById('optidx-btn').addEventListener('click', showOptidx);
+    });
+     //optidx
+    // Function to handle `Select Lots` functionality for OPTIDX panel
+    document.getElementById('optidx-symbol').addEventListener('change', function () {
+        const symbol = this.value;
+        const lotSizeSelect = document.getElementById('optidx-lot-size');
+        const quantityInput = document.getElementById('optidx-quantity');
+
+        // Clear existing options in the lot size dropdown
+        lotSizeSelect.innerHTML = '<option>Select Lots</option>';
+
+        let lotMultiplier = 0;
+
+        // Set the lot multiplier based on the selected symbol
+        if (symbol === 'NIFTY' || symbol === 'FINNIFTY') {
+            lotMultiplier = 25;
+        } else if (symbol === 'BANKNIFTY') {
+            lotMultiplier = 15;
+        } else if (symbol === 'MIDCAPNIFTY') {
+            lotMultiplier = 50;
+        }
+
+        // Populate the lot size dropdown with options in multiples of the selected lot size
+        if (lotMultiplier > 0) {
+            for (let i = lotMultiplier; i <= 5000; i += lotMultiplier) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.text = i;
+                lotSizeSelect.appendChild(option);
+            }
+        }
+
+        // Update the quantity input based on the selected lot size
+        lotSizeSelect.addEventListener('change', function () {
+            const selectedLotSize = this.value;
+            quantityInput.value = selectedLotSize;
+        });
+    });
+ /////dynamic strike price allocation
+//optidx-symbol change handler for lot sizes and AJAX request to fetch LTP
+document.getElementById('optidx-symbol').addEventListener('change', function () {
+    const symbol = this.value;
+    const lotSizeSelect = document.getElementById('optidx-lot-size');
+    const quantityInput = document.getElementById('optidx-quantity');
+    lotSizeSelect.innerHTML = '<option>Select Lots</option>';
+
+    // Determine lot size based on symbol
+    let lotMultiplier = 0;
+    if (symbol === 'NIFTY' || symbol === 'FINNIFTY') {
+        lotMultiplier = 25;
+    } else if (symbol === 'BANKNIFTY') {
+        lotMultiplier = 15;
+    } else if (symbol === 'MIDCAPNIFTY') {
+        lotMultiplier = 50;
+    }
+
+    // Populate the lot size dropdown
+    if (lotMultiplier > 0) {
+        for (let i = lotMultiplier; i <= 5000; i += lotMultiplier) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.text = i;
+            lotSizeSelect.appendChild(option);
+        }
+    }
+
+    // Update quantity input based on selected lot size
+    lotSizeSelect.addEventListener('change', function () {
+        quantityInput.value = this.value;
+    });
+
+    // Fetch symbol data to get LTP and update strike prices
+    if (symbol) {
+        fetch(`/fetch-symbol-data/?symbol=${symbol}`)
+            .then(response => response.json())
+            .then(data => {
+                const roundedLTP = data.rounded_LTP;
+                const strikes = data.strikes;
+
+                // Get the call and put strike select elements
+                const callStrikeSelect = document.getElementById('call-strike');
+                const putStrikeSelect = document.getElementById('put-strike');
+
+                // Clear existing options
+                callStrikeSelect.innerHTML = '';
+                putStrikeSelect.innerHTML = '';
+
+                // Add 10 up and 10 down options around the rounded LTP for Call and Put Strike
+                strikes.forEach(strike => {
+                    const optionCall = document.createElement('option');
+                    optionCall.value = strike;
+                    optionCall.text = strike;
+                    callStrikeSelect.appendChild(optionCall);
+
+                    const optionPut = document.createElement('option');
+                    optionPut.value = strike;
+                    optionPut.text = strike;
+                    putStrikeSelect.appendChild(optionPut);
+                });
+
+                // Set the rounded_LTP as the default selected strike in both Call and Put
+                callStrikeSelect.value = roundedLTP;
+                putStrikeSelect.value = roundedLTP;
+
+                // **INSERT THIS NEW CODE HERE**:
+                // Update the display section with symbol and LTP
+                const displaySection = document.querySelector('#optidx-panel h1');
+                displaySection.textContent = `${data.symbol} - LTP: ${data.LTP}`;
+
+                console.log("Rounded LTP:", roundedLTP);
+                console.log("Strikes:", strikes);
+            })
+            .catch(error => console.error('Error fetching symbol data:', error));
+    }
+});
+
+
+//change strike price using plus and minus button
+    document.addEventListener("DOMContentLoaded", function() {
+    const callStrikeSelect = document.getElementById("call-strike");
+    const putStrikeSelect = document.getElementById("put-strike");
+
+    // Function to navigate strikes
+    function navigateStrikes(selectElement, direction) {
+        const options = Array.from(selectElement.options);
+        const currentIndex = selectElement.selectedIndex;
+
+        if (direction === "next" && currentIndex < options.length - 1) {
+            selectElement.selectedIndex = currentIndex + 1;
+        } else if (direction === "previous" && currentIndex > 0) {
+            selectElement.selectedIndex = currentIndex - 1;
+        }
+    }
+
+    // Event listeners for Call Strike
+    document.getElementById("call-strike-plus").addEventListener("click", function() {
+        navigateStrikes(callStrikeSelect, "next");
+    });
+
+    document.getElementById("call-strike-minus").addEventListener("click", function() {
+        navigateStrikes(callStrikeSelect, "previous");
+    });
+
+    // Event listeners for Put Strike
+    document.getElementById("put-strike-plus").addEventListener("click", function() {
+        navigateStrikes(putStrikeSelect, "next");
+    });
+
+    document.getElementById("put-strike-minus").addEventListener("click", function() {
+        navigateStrikes(putStrikeSelect, "previous");
+    });
+});
+
+
+</script>
+
+
+
+
+
+
+
+
+</body>
+</html>
