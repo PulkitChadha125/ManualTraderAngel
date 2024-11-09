@@ -120,24 +120,25 @@
 
             <!-- Table Display for Positions -->
             <table class="w-full text-left border-collapse mb-4">
-                <thead class="bg-indigo-500 text-white border-b border-gray-300">
-                    <tr>
-                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">Symbol</th>
-                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">Avg Price</th>
-                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">Qty</th>
-                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">S/L</th>
-                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">Target</th>
-                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">Pos</th>
-                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">LTP</th>
-                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">P&L</th>
-                        <th class="px-3 py-2 border-r border-gray-300 cursor-col-resize">Unrealized P&L</th>
-                        <th class="px-3 py-2 cursor-col-resize">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="positions-body" class="text-black">
-                    <!-- Dynamic rows will be inserted here by JavaScript -->
-                </tbody>
-            </table>
+    <thead class="bg-indigo-500 text-white border-b border-gray-300">
+        <tr>
+            <th class="px-3 py-2 border">Symbol</th>
+            <th class="px-3 py-2 border">Avg Price</th>
+            <th class="px-3 py-2 border">Qty</th>
+            <th class="px-3 py-2 border">S/L</th>
+            <th class="px-3 py-2 border">Target</th>
+            <th class="px-3 py-2 border">Pos</th>
+            <th class="px-3 py-2 border">LTP</th>
+            <th class="px-3 py-2 border">P&L</th>
+            <th class="px-3 py-2 border">Unrealized P&L</th>
+            <th class="px-3 py-2 border">Action</th>
+        </tr>
+    </thead>
+    <tbody id="positions-body" class="text-black">
+        <!-- Dynamic rows will be inserted here by JavaScript -->
+    </tbody>
+</table>
+
 
             <!-- Pagination Controls -->
             <div class="flex justify-center">
@@ -241,8 +242,8 @@
                     <span class="text-black text-sm">MKT -- LTP</span>
                 </div>
                 <div class="flex justify-between mb-2">
-                    <button class="w-1/2 p-2 bg-green-500 text-white rounded font-bold text-sm mr-1">BUY CE</button>
-                    <button class="w-1/2 p-2 bg-red-500 text-white rounded font-bold text-sm ml-1">SELL CE</button>
+                 <button id="buy-ce-button" class="w-1/2 p-2 bg-green-500 text-white rounded font-bold text-sm">BUY CE</button>
+                    <button id="sell-ce-optidx" class="w-1/2 p-2 bg-red-500 text-white rounded font-bold text-sm ml-1">SELL CE</button>
                 </div>
                 <div class="grid grid-cols-4 gap-2 mb-2">
                     <button class="p-1 bg-blue-600 text-white rounded text-xs">25%</button>
@@ -261,8 +262,8 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
-                    <button class="p-2 bg-green-500 text-white rounded font-bold">B</button>
-                    <button class="p-2 bg-red-500 text-white rounded font-bold">S</button>
+                    <button id="call-b-button" class="p-2 bg-green-500 text-white rounded font-bold">B</button>
+                    <button id="call-s-button" class="p-2 bg-red-500 text-white rounded font-bold">S</button>
                 </div>
             </div>
 
@@ -276,8 +277,8 @@
                          <button id="put-strike-minus" class="bg-red-500 text-white p-2 rounded-l">-</button>
 
                         <select id="put-strike" class="w-full p-2 bg-white text-black text-center">
-    <option>Select Strike</option>
-</select>
+                          <option>Select Strike</option>
+                        </select>
                     <button id="put-strike-plus" class="bg-red-500 text-white p-2 rounded-r">+</button>
                     </div>
                 </div>
@@ -293,8 +294,8 @@
                     <span class="text-black text-sm">MKT -- LTP</span>
                 </div>
                 <div class="flex justify-between mb-2">
-                    <button class="w-1/2 p-2 bg-green-500 text-white rounded font-bold text-sm mr-1">BUY PE</button>
-                    <button class="w-1/2 p-2 bg-red-500 text-white rounded font-bold text-sm ml-1">SELL PE</button>
+                <button id="buy-pe-optidx" class="w-1/2 p-2 bg-green-500 text-white rounded font-bold text-sm mr-1">BUY PE</button>
+                    <button id="sell-pe-optidx" class="w-1/2 p-2 bg-red-500 text-white rounded font-bold text-sm ml-1">SELL PE</button>
                 </div>
                 <div class="grid grid-cols-4 gap-2 mb-2">
                     <button class="p-1 bg-blue-600 text-white rounded text-xs">25%</button>
@@ -313,8 +314,8 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
-                    <button class="p-2 bg-green-500 text-white rounded font-bold">B</button>
-                    <button class="p-2 bg-red-500 text-white rounded font-bold">S</button>
+                    <button id="put-b-button" class="p-2 bg-green-500 text-white rounded font-bold">B</button>
+                    <button id="put-s-button" class="p-2 bg-red-500 text-white rounded font-bold">S</button>
                 </div>
             </div>
         </div>
@@ -929,8 +930,403 @@ document.getElementById('optidx-symbol').addEventListener('change', function () 
         navigateStrikes(putStrikeSelect, "previous");
     });
 });
+///////////optidx order placement
+//BUY CE
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('buy-ce-button').addEventListener('click', function() {
+        // Get the required fields
+        const symbol = document.getElementById('optidx-symbol').value;
+        const expiry = document.getElementById('optidx-expiry').value; // Updated ID here
+        const quantity = document.getElementById('optidx-quantity').value;
+        const strike = document.getElementById('call-strike').value;
+
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('symbol', symbol);
+        formData.append('expiry', expiry);
+        formData.append('quantity', quantity);
+        formData.append('strike', strike);
+
+        // Send AJAX POST request
+        fetch("/buy-ce-optidx/", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            console.log("BUY CE order placed successfully");
+            // Optionally, add success feedback to the user here
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
 
 
+    //SELL CE
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('sell-ce-optidx').addEventListener('click', function() {
+        // Get the required fields
+        const symbol = document.getElementById('optidx-symbol').value;
+        const expiry = document.getElementById('optidx-expiry').value; // Updated ID here
+        const quantity = document.getElementById('optidx-quantity').value;
+        const strike = document.getElementById('call-strike').value;
+
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('symbol', symbol);
+        formData.append('expiry', expiry);
+        formData.append('quantity', quantity);
+        formData.append('strike', strike);
+
+        // Send AJAX POST request
+        fetch("/sell-ce-optidx/", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            console.log("BUY CE order placed successfully");
+            // Optionally, add success feedback to the user here
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+    //BUY PE
+    document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('buy-pe-optidx').addEventListener('click', function() {
+        // Get the required fields
+        const symbol = document.getElementById('optidx-symbol').value;
+        const expiry = document.getElementById('optidx-expiry').value; // Updated ID here
+        const quantity = document.getElementById('optidx-quantity').value;
+        const strike = document.getElementById('put-strike').value;
+
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('symbol', symbol);
+        formData.append('expiry', expiry);
+        formData.append('quantity', quantity);
+        formData.append('strike', strike);
+
+        // Send AJAX POST request
+        fetch("/buy-pe-optidx/", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            console.log("BUY CE order placed successfully");
+            // Optionally, add success feedback to the user here
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+    //SELL PE
+    document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('sell-pe-optidx').addEventListener('click', function() {
+        // Get the required fields
+        const symbol = document.getElementById('optidx-symbol').value;
+        const expiry = document.getElementById('optidx-expiry').value; // Updated ID here
+        const quantity = document.getElementById('optidx-quantity').value;
+        const strike = document.getElementById('put-strike').value;
+
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('symbol', symbol);
+        formData.append('expiry', expiry);
+        formData.append('quantity', quantity);
+        formData.append('strike', strike);
+
+        // Send AJAX POST request
+        fetch("/sell-pe-optidx/", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            console.log("BUY CE order placed successfully");
+            // Optionally, add success feedback to the user here
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+    //limit order optidx pannel
+   //buy ce limit
+      document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('call-b-button').addEventListener('click', function() {
+        // Get the required fields
+        const symbol = document.getElementById('optidx-symbol').value;
+        const expiry = document.getElementById('optidx-expiry').value; // Updated ID here
+        const limitQty = document.getElementById('call-limit-qty').value;
+        const strike = document.getElementById('put-strike').value;
+        const limitPrice = document.getElementById('call-limit-price').value;
+
+
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('symbol', symbol);
+        formData.append('expiry', expiry);
+        formData.append('limitQty', limitQty);
+        formData.append('strike', strike);
+        formData.append('limitPrice', limitPrice);
+
+        // Send AJAX POST request
+        fetch("/buy-call-optidx/", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            console.log("BUY CE order placed successfully");
+            // Optionally, add success feedback to the user here
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+//sell ce limit
+  document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('call-s-button').addEventListener('click', function() {
+        // Get the required fields
+        const symbol = document.getElementById('optidx-symbol').value;
+        const expiry = document.getElementById('optidx-expiry').value; // Updated ID here
+        const limitQty = document.getElementById('call-limit-qty').value;
+        const strike = document.getElementById('put-strike').value;
+        const limitPrice = document.getElementById('call-limit-price').value;
+
+
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('symbol', symbol);
+        formData.append('expiry', expiry);
+        formData.append('limitQty', limitQty);
+        formData.append('strike', strike);
+        formData.append('limitPrice', limitPrice);
+
+        // Send AJAX POST request
+        fetch("/sell-call-optidx/", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            console.log("BUY CE order placed successfully");
+            // Optionally, add success feedback to the user here
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+    //buy pe limit
+  document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('put-b-button').addEventListener('click', function() {
+        // Get the required fields
+        const symbol = document.getElementById('optidx-symbol').value;
+        const expiry = document.getElementById('optidx-expiry').value; // Updated ID here
+        const limitQty = document.getElementById('put-limit-qty').value;
+        const strike = document.getElementById('put-strike').value;
+        const limitPrice = document.getElementById('put-limit-price').value;
+
+
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('symbol', symbol);
+        formData.append('expiry', expiry);
+        formData.append('limitQty', limitQty);
+        formData.append('strike', strike);
+        formData.append('limitPrice', limitPrice);
+
+        // Send AJAX POST request
+        fetch("/buy-put-optidx/", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            console.log("BUY CE order placed successfully");
+            // Optionally, add success feedback to the user here
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+//sell pe limit
+    document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('put-s-button').addEventListener('click', function() {
+        // Get the required fields
+        const symbol = document.getElementById('optidx-symbol').value;
+        const expiry = document.getElementById('optidx-expiry').value; // Updated ID here
+        const limitQty = document.getElementById('put-limit-qty').value;
+        const strike = document.getElementById('put-strike').value;
+        const limitPrice = document.getElementById('put-limit-price').value;
+
+
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('symbol', symbol);
+        formData.append('expiry', expiry);
+        ///check
+        formData.append('limitQty', limitQty);
+        formData.append('strike', strike);
+        formData.append('limitPrice', limitPrice);
+
+        // Send AJAX POST request
+        fetch("/sell-put-optidx/", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            console.log("BUY CE order placed successfully");
+            // Optionally, add success feedback to the user here
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+////////////net position update functionality /////////////
+    function fetchPositions() {
+    fetch('/fetch-positions/')
+        .then(response => response.json())
+        .then(data => {
+            const positionsBody = document.getElementById('positions-body');
+            positionsBody.innerHTML = ''; // Clear existing rows
+
+            data.forEach(position => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td class="px-3 py-2 border">${position.tradingsymbol}</td>
+                    <td class="px-3 py-2 border">${position.avgnetprice}</td>
+                    <td class="px-3 py-2 border">${position.lotsize}</td>
+                    <td class="px-3 py-2 border"></td> <!-- S/L -->
+                    <td class="px-3 py-2 border"></td> <!-- Target -->
+                    <td class="px-3 py-2 border">${position.netqty > 0 ? 'B' : 'S'}</td>
+                    <td class="px-3 py-2 border">${position.netprice}</td>
+                    <td class="px-3 py-2 border">${position.pnl}</td>
+                    <td class="px-3 py-2 border">${position.unrealised}</td>
+                    <td class="px-3 py-2 border"><button class="p-1 bg-red-500 text-white rounded">Action</button></td>
+                `;
+
+                positionsBody.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error fetching positions:', error));
+}
+
+// Fetch positions every 1 second
+setInterval(fetchPositions, 1000);
+
+
+    ///////fetch optidx ltp spot
+    // Function to update only the LTP in the label every second
+function updateLTPLabel() {
+    const symbol = document.getElementById('optidx-symbol').value; // Get the selected symbol
+
+    if (symbol) {
+        fetch(`/fetch-ltp-spot/?symbol=${symbol}`)
+            .then(response => response.json())
+            .then(data => {
+                // Update the label with the current LTP
+                const displaySection = document.querySelector('#optidx-panel h1');
+                displaySection.textContent = `${data.symbol} - LTP: ${data.LTP}`;
+            })
+            .catch(error => console.error('Error fetching LTP:', error));
+    }
+}
+
+// Call updateLTPLabel every second
+setInterval(updateLTPLabel, 1000);
+
+//update call and put ltp
+ // Function to update call and put LTP every second
+function updateCallPutLTP() {
+    const symbol = document.getElementById('optidx-symbol').value;
+    const expiry = document.getElementById('optidx-expiry').value;
+    const callStrike = document.getElementById('call-strike').value;
+    const putStrike = document.getElementById('put-strike').value;
+
+    fetch(`/update-call-put-ltp/?symbol=${symbol}&expiry=${expiry}&call_strike=${callStrike}&put_strike=${putStrike}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Call Symbol:", data.call_symbol);
+            console.log("Put Symbol:", data.put_symbol);
+            console.log("Call LTP:", data.call_ltp);
+            console.log("Put LTP:", data.put_ltp);
+
+            // Update the UI with the LTP values if needed
+            document.getElementById('call-ltp').textContent = `LTP: ${data.call_ltp}`;
+            document.getElementById('put-ltp').textContent = `LTP: ${data.put_ltp}`;
+        })
+        .catch(error => console.error('Error updating call/put LTP:', error));
+}
+
+// Call the function every second to update LTP
+setInterval(updateCallPutLTP, 1000);
 
 
 </script>

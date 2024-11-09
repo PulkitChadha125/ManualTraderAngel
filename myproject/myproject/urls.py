@@ -19,7 +19,7 @@ from django.urls import path
 from dashboard import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('/admin/', admin.site.urls),
     path('', views.dashboard_view, name='dashboard'),
     path('login/', views.api_login, name='api_login'),
     path('futidx-buy/', views.futidx_buy, name='futidx_buy'),
@@ -27,4 +27,28 @@ urlpatterns = [
     path('b-action/', views.b_action, name='b_action'),
     path('s-action/', views.s_action, name='s_action'),
     path('fetch-symbol-data/', views.fetch_symbol_data, name='fetch_symbol_data'),
+    #     date 31 Oct 2024 market orders
+
+    path('buy-ce-optidx/', views.buy_ce_optidx, name='buy_ce_optidx'),
+    path('sell-ce-optidx/', views.sell_ce_optidx, name='sell_ce_optidx'),
+    path('buy-pe-optidx/', views.buy_pe_optidx, name='buy_pe_optidx'),
+    path('sell-pe-optidx/', views.sell_pe_optidx, name='sell_pe_optidx'),
+
+    # limit order
+
+    # Call section
+    path('buy-call-optidx/', views.buy_call_optidx, name='buy_call_optidx'),
+    path('sell-call-optidx/', views.sell_call_optidx, name='sell_call_optidx'),
+
+    # Put section
+    path('buy-put-optidx/', views.buy_put_optidx, name='buy_put_optidx'),
+    path('sell-put-optidx/', views.sell_put_optidx, name='sell_put_optidx'),
+    # Net Pos Section  section
+
+    path('fetch-positions/', views.fetch_positions, name='fetch_positions'),
+
+    #     fetch ltp spot option
+    path('fetch-ltp-spot/', views.fetch_ltp_only, name='fetch_ltp_spot'),
+    #     fetch ltp CALL PUT option
+    path('update-call-put-ltp/', views.update_call_put_ltp, name='update_call_put_ltp'),
 ]

@@ -3,120 +3,120 @@
 // =============================
 
 // Sample data to simulate fetching from an API
-const positionsData = [
-  {
-    symbol: 'AAPL',
-    avgPrice: 150,
-    qty: 10,
-    sl: 145,
-    target: 160,
-    pos: 10,
-    ltp: 155,
-    pnl: 50,
-    unrealizedPnL: 25
-  },
-  {
-    symbol: 'GOOGL',
-    avgPrice: 2700,
-    qty: 5,
-    sl: 2650,
-    target: 2800,
-    pos: 5,
-    ltp: 2750,
-    pnl: 250,
-    unrealizedPnL: 150
-  },
-  {
-    symbol: 'AAPL',
-    avgPrice: 150,
-    qty: 10,
-    sl: 145,
-    target: 160,
-    pos: 10,
-    ltp: 155,
-    pnl: 50,
-    unrealizedPnL: 25
-  },
-  {
-    symbol: 'GOOGL',
-    avgPrice: 2700,
-    qty: 5,
-    sl: 2650,
-    target: 2800,
-    pos: 5,
-    ltp: 2750,
-    pnl: 250,
-    unrealizedPnL: 150
-  },
-  {
-    symbol: 'AAPL',
-    avgPrice: 150,
-    qty: 10,
-    sl: 145,
-    target: 160,
-    pos: 10,
-    ltp: 155,
-    pnl: 50,
-    unrealizedPnL: 25
-  },
-  {
-    symbol: 'GOOGL',
-    avgPrice: 2700,
-    qty: 5,
-    sl: 2650,
-    target: 2800,
-    pos: 5,
-    ltp: 2750,
-    pnl: 250,
-    unrealizedPnL: 150
-  },
-  {
-    symbol: 'AAPL',
-    avgPrice: 150,
-    qty: 10,
-    sl: 145,
-    target: 160,
-    pos: 10,
-    ltp: 155,
-    pnl: 50,
-    unrealizedPnL: 25
-  },
-  {
-    symbol: 'GOOGL',
-    avgPrice: 2700,
-    qty: 5,
-    sl: 2650,
-    target: 2800,
-    pos: 5,
-    ltp: 2750,
-    pnl: 250,
-    unrealizedPnL: 150
-  }
-]
+//const positionsData = [
+//  {
+//    symbol: 'AAPL',
+//    avgPrice: 150,
+//    qty: 10,
+//    sl: 145,
+//    target: 160,
+//    pos: 10,
+//    ltp: 155,
+//    pnl: 50,
+//    unrealizedPnL: 25
+//  },
+//  {
+//    symbol: 'GOOGL',
+//    avgPrice: 2700,
+//    qty: 5,
+//    sl: 2650,
+//    target: 2800,
+//    pos: 5,
+//    ltp: 2750,
+//    pnl: 250,
+//    unrealizedPnL: 150
+//  },
+//  {
+//    symbol: 'AAPL',
+//    avgPrice: 150,
+//    qty: 10,
+//    sl: 145,
+//    target: 160,
+//    pos: 10,
+//    ltp: 155,
+//    pnl: 50,
+//    unrealizedPnL: 25
+//  },
+//  {
+//    symbol: 'GOOGL',
+//    avgPrice: 2700,
+//    qty: 5,
+//    sl: 2650,
+//    target: 2800,
+//    pos: 5,
+//    ltp: 2750,
+//    pnl: 250,
+//    unrealizedPnL: 150
+//  },
+//  {
+//    symbol: 'AAPL',
+//    avgPrice: 150,
+//    qty: 10,
+//    sl: 145,
+//    target: 160,
+//    pos: 10,
+//    ltp: 155,
+//    pnl: 50,
+//    unrealizedPnL: 25
+//  },
+//  {
+//    symbol: 'GOOGL',
+//    avgPrice: 2700,
+//    qty: 5,
+//    sl: 2650,
+//    target: 2800,
+//    pos: 5,
+//    ltp: 2750,
+//    pnl: 250,
+//    unrealizedPnL: 150
+//  },
+//  {
+//    symbol: 'AAPL',
+//    avgPrice: 150,
+//    qty: 10,
+//    sl: 145,
+//    target: 160,
+//    pos: 10,
+//    ltp: 155,
+//    pnl: 50,
+//    unrealizedPnL: 25
+//  },
+//  {
+//    symbol: 'GOOGL',
+//    avgPrice: 2700,
+//    qty: 5,
+//    sl: 2650,
+//    target: 2800,
+//    pos: 5,
+//    ltp: 2750,
+//    pnl: 250,
+//    unrealizedPnL: 150
+//  }
+//]
 
 
-function loadTable (data, type) {
-  const tableBody = document.getElementById('positions-body')
-  tableBody.innerHTML = '' // Clear the table before loading new data
-
-  let html = ''
-  data.forEach(row => {
-    html += `<tr>
-                        <td>${row.symbol}</td>
-                        <td>${row.avgPrice}</td>
-                        <td>${row.qty}</td>
-                        <td>${row.sl}</td>
-                        <td>${row.target}</td>
-                        <td>${row.pos}</td>
-                        <td>${row.ltp}</td>
-                        <td>${row.pl}</td>
-                        <td>${row.upl}</td>
-                        <td><button class="bg-red-500 text-white px-2 py-1 rounded">Action</button></td>
-                    </tr>`
-  })
-
-  tableBody.innerHTML = html
-}
+//function loadTable (data, type) {
+//  const tableBody = document.getElementById('positions-body')
+//  tableBody.innerHTML = '' // Clear the table before loading new data
+//
+//  let html = ''
+//  data.forEach(row => {
+//    html += `<tr>
+//                        <td>${row.symbol}</td>
+//                        <td>${row.avgPrice}</td>
+//                        <td>${row.qty}</td>
+//                        <td>${row.sl}</td>
+//                        <td>${row.target}</td>
+//                        <td>${row.pos}</td>
+//                        <td>${row.ltp}</td>
+//                        <td>${row.pl}</td>
+//                        <td>${row.upl}</td>
+//                        <td><button class="bg-red-500 text-white px-2 py-1 rounded">Action</button></td>
+//                    </tr>`
+//  })
+//
+//  tableBody.innerHTML = html
+//}
 
 // Event listeners for the buttons
 document.getElementById('positions-tab').addEventListener('click', () => {
@@ -282,14 +282,14 @@ document
   })
 
 // Function to update LTP values (simulated)
-function updateLtpValues () {
-  document.getElementById('call-ltp').textContent = (
-    Math.random() * 100
-  ).toFixed(2)
-  document.getElementById('put-ltp').textContent = (
-    Math.random() * 100
-  ).toFixed(2)
-}
+//function updateLtpValues () {
+//  document.getElementById('call-ltp').textContent = (
+//    Math.random() * 100
+//  ).toFixed(2)
+//  document.getElementById('put-ltp').textContent = (
+//    Math.random() * 100
+//  ).toFixed(2)
+//}
 
 // Simulate LTP updates every 5 seconds
 setInterval(updateLtpValues, 5000)

@@ -93,6 +93,13 @@ def get_historical_data(symbol, token, timeframe, segment):
     except Exception as e:
         logger.exception(f"Historic Api failed: {e}")
 
+def net_position():
+    global smartApi
+    res=smartApi.position()
+    print("Net Pos Res: ",res)
+    return res
+
+
 def buy(symbol,token,quantity,exchange):
     global smartApi
     try:

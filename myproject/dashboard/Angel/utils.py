@@ -2,20 +2,30 @@ import pandas as pd
 from dashboard.Angel import AngelIntegration
 import os
 
-def get_ltp(segment,symbol,token):
-    return AngelIntegration.get_ltp(segment,symbol,token)
+
+def get_position():
+    return AngelIntegration.net_position()
+
+
+def get_ltp(segment, symbol, token):
+    return AngelIntegration.get_ltp(segment, symbol, token)
+
 
 def sell(symbol, token, quantity, exchange):
     AngelIntegration.sell(symbol, token, quantity, exchange)
 
+
 def buy(symbol, token, quantity, exchange):
     AngelIntegration.buy(symbol, token, quantity, exchange)
 
-def BuyLmt(symbol, token, quantity, exchange,price):
-    AngelIntegration.BuyLmt(symbol,token,quantity,exchange,price)
 
-def SellLmt(symbol, token, quantity, exchange,price):
-    AngelIntegration.SellLmt(symbol,token,quantity,exchange,price)
+def BuyLmt(symbol, token, quantity, exchange, price):
+    AngelIntegration.BuyLmt(symbol, token, quantity, exchange, price)
+
+
+def SellLmt(symbol, token, quantity, exchange, price):
+    AngelIntegration.SellLmt(symbol, token, quantity, exchange, price)
+
 
 def delete_file_contents(file_name):
     try:
@@ -49,14 +59,17 @@ def get_api_credentials():
 
     return credentials
 
+
 def get_token(symbol):
     instrument_path = os.path.join(os.path.dirname(__file__), 'Instrument.csv')
-    df= pd.read_csv(instrument_path)
+    df = pd.read_csv(instrument_path)
     row = df.loc[df['symbol'] == symbol]
     if not row.empty:
         token = row.iloc[0]['token']
         print("token: ", token)
         return token
+
+
 def login_to_angel():
     credentials_dict = get_api_credentials()
     api_key = credentials_dict.get('apikey')

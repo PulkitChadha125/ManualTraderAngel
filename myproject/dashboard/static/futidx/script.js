@@ -62,17 +62,17 @@ document
   })
 
 // Function to update LTP values (simulated)
-function updateLtpValues () {
-  document.getElementById('call-ltp').textContent = (
-    Math.random() * 100
-  ).toFixed(2)
-  document.getElementById('put-ltp').textContent = (
-    Math.random() * 100
-  ).toFixed(2)
-}
+//function updateLtpValues () {
+//  document.getElementById('call-ltp').textContent = (
+//    Math.random() * 100
+//  ).toFixed(2)
+//  document.getElementById('put-ltp').textContent = (
+//    Math.random() * 100
+//  ).toFixed(2)
+//}
 
 // Simulate LTP updates every 5 seconds
-setInterval(updateLtpValues, 5000)
+//setInterval(updateLtpValues, 5000)
 
 // Function to handle strike selection
 function handleStrikeSelection (isCall) {
